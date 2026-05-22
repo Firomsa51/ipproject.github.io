@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HU Campus Inventory Management System</title>
+  <title>HU Inventory Management System | Haramaya University</title>
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght=600;700&family=DM+Sans:wght=300;400;500;600&display=swap" rel="stylesheet"/>
+  <!-- Use a different, more distinctive font combination -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet"/>
 </head>
 <body>
 
@@ -14,53 +15,53 @@
       <div class="auth-brand">
         <div class="auth-logo">HU</div>
         <div>
-          <div class="auth-brand-name">HU Cluster</div>
-          <div class="auth-brand-sub">Inventory Management System</div>
+          <div class="auth-brand-name">HU Inventory System</div>
+          <div class="auth-brand-sub">Asset & Stock Control</div>
         </div>
       </div>
       <div class="auth-left-body">
-        <h2 class="auth-headline">Track university assets<br/>with flawless precision.</h2>
-        <p class="auth-desc">A centralized stock database for Haramaya University Cluster managing equipment, material stock levels, suppliers, stock movements, and requests.</p>
+        <h2 class="auth-headline">Precision inventory<br/>for university operations.</h2>
+        <p class="auth-desc">Centralized inventory management for Haramaya University — track equipment, supplies, stock levels, suppliers, and movement logs in real time.</p>
         <div class="auth-features">
-          <div class="auth-feature"><span>&#10003;</span> Stock Item Catalog</div>
-          <div class="auth-feature"><span>&#10003;</span> Supplier Records</div>
-          <div class="auth-feature"><span>&#10003;</span> Stock Logs & Movement</div>
-          <div class="auth-feature"><span>&#10003;</span> Store Categories & Rooms</div>
+          <div class="auth-feature"><span>✓</span> Full Stock Catalog</div>
+          <div class="auth-feature"><span>✓</span> Supplier Directory</div>
+          <div class="auth-feature"><span>✓</span> Movement History</div>
+          <div class="auth-feature"><span>✓</span> Automated Valuation</div>
         </div>
       </div>
-      <div class="auth-left-footer">Haramaya University &mdash; College of Computing and Informatics</div>
+      <div class="auth-left-footer">Haramaya University — College of Computing and Informatics</div>
     </div>
     <div class="auth-right">
       <div class="auth-form active" id="loginForm">
         <div class="auth-form-header">
-          <h2>Welcome back</h2>
-          <p>Sign in to your Inventory portal account</p>
+          <h2>Access inventory portal</h2>
+          <p>Sign in with your credentials</p>
         </div>
         <div class="auth-field">
           <label>Username</label>
-          <input type="text" id="loginUsername" placeholder="Enter your username" />
+          <input type="text" id="loginUsername" placeholder="e.g., admin" />
         </div>
         <div class="auth-field">
           <label>Password</label>
           <div class="pass-wrap">
-            <input type="password" id="loginPassword" placeholder="Enter your password" />
-            <button class="pass-toggle" onclick="togglePass('loginPassword', this)">&#128065;</button>
+            <input type="password" id="loginPassword" placeholder="••••••" />
+            <button class="pass-toggle" onclick="togglePass('loginPassword', this)">👁️</button>
           </div>
         </div>
         <div class="auth-error" id="loginError"></div>
-        <button class="auth-btn" onclick="handleLogin()">Sign In</button>
+        <button class="auth-btn" onclick="handleLogin()">Sign In →</button>
         <div class="auth-switch">
-          Do not have an account?
+          New user?
           <button onclick="switchToSignup()">Create account</button>
         </div>
         <div class="auth-hint">
-          <strong>Demo:</strong> username <code>admin</code> &nbsp;|&nbsp; password <code>admin123</code>
+          <span>🔐 Demo: </span> <code>admin</code> / <code>admin123</code>
         </div>
       </div>
       <div class="auth-form" id="signupForm">
         <div class="auth-form-header">
-          <h2>Create account</h2>
-          <p>Register a new Store Keeper account</p>
+          <h2>Register store keeper</h2>
+          <p>Create a new inventory account</p>
         </div>
         <div class="auth-field">
           <label>Full Name</label>
@@ -82,19 +83,19 @@
           <label>Password</label>
           <div class="pass-wrap">
             <input type="password" id="signupPassword" placeholder="Create a password" />
-            <button class="pass-toggle" onclick="togglePass('signupPassword', this)">&#128065;</button>
+            <button class="pass-toggle" onclick="togglePass('signupPassword', this)">👁️</button>
           </div>
         </div>
         <div class="auth-field">
           <label>Confirm Password</label>
           <div class="pass-wrap">
             <input type="password" id="signupConfirm" placeholder="Repeat your password" />
-            <button class="pass-toggle" onclick="togglePass('signupConfirm', this)">&#128065;</button>
+            <button class="pass-toggle" onclick="togglePass('signupConfirm', this)">👁️</button>
           </div>
         </div>
         <div class="auth-error" id="signupError"></div>
         <div class="auth-success" id="signupSuccess"></div>
-        <button class="auth-btn" onclick="handleSignup()">Create Account</button>
+        <button class="auth-btn" onclick="handleSignup()">Create account →</button>
         <div class="auth-switch">
           Already have an account?
           <button onclick="switchToLogin()">Sign in</button>
@@ -109,29 +110,29 @@
       <div class="sidebar-logo">
         <div class="logo-icon">HU</div>
         <div class="logo-text">
-          <span class="logo-title">Inventory Portal</span>
+          <span class="logo-title">HU Inventory</span>
           <span class="logo-sub">Haramaya University</span>
         </div>
       </div>
 
       <nav class="sidebar-nav">
         <button class="nav-btn active" data-tab="dashboard">
-          <span class="nav-icon">&#9783;</span> Dashboard
+          <span class="nav-icon">📊</span> Dashboard
         </button>
         <button class="nav-btn" data-tab="items">
-          <span class="nav-icon">&#128230;</span> Stock Items
+          <span class="nav-icon">📦</span> Stock Items
         </button>
         <button class="nav-btn" data-tab="categories">
-          <span class="nav-icon">&#127970;</span> Store Categories
+          <span class="nav-icon">🏷️</span> Categories
         </button>
         <button class="nav-btn" data-tab="suppliers">
-          <span class="nav-icon">&#128100;</span> Suppliers
+          <span class="nav-icon">🏢</span> Suppliers
         </button>
         <button class="nav-btn" data-tab="movements">
-          <span class="nav-icon">&#128197;</span> Stock Movements
+          <span class="nav-icon">🔄</span> Movements
         </button>
         <button class="nav-btn" data-tab="valuation">
-          <span class="nav-icon">&#128181;</span> Inventory Value
+          <span class="nav-icon">💰</span> Valuation
         </button>
       </nav>
 
@@ -139,18 +140,18 @@
         <div class="user-card">
           <div class="user-avatar">SA</div>
           <div>
-            <div class="user-name">Admin Store</div>
-            <div class="user-role">Store Administrator</div>
+            <div class="user-name">Store Admin</div>
+            <div class="user-role">Administrator</div>
           </div>
         </div>
-        <button class="btn-logout" onclick="handleLogout()">&#x2192; Logout</button>
+        <button class="btn-logout" onclick="handleLogout()">🚪 Logout</button>
       </div>
     </aside>
 
     <main class="main" id="main">
       <header class="topbar">
         <div class="topbar-left">
-          <button class="menu-toggle" id="menuToggle">&#9776;</button>
+          <button class="menu-toggle" id="menuToggle">☰</button>
           <h1 class="page-title" id="pageTitle">Dashboard</h1>
         </div>
         <div class="topbar-right">
@@ -161,36 +162,36 @@
       <section class="tab-content active" id="tab-dashboard">
         <div class="welcome-banner">
           <div class="welcome-text">
-            <h2>Welcome back, Asset Manager</h2>
-            <p>HU Cluster Inventory Management System &mdash; Haramaya University</p>
+            <h2>Welcome, Asset Manager</h2>
+            <p>HU Inventory Management System — real‑time stock control for Haramaya University</p>
           </div>
-          <div class="welcome-deco">INV</div>
+          <div class="welcome-deco">IMS</div>
         </div>
 
         <div class="stats-grid">
-          <div class="stat-card" style="--accent:#2e7d32">
-            <div class="stat-icon">&#128230;</div>
+          <div class="stat-card" style="--accent:#0b5e42">
+            <div class="stat-icon">📦</div>
             <div class="stat-info">
               <div class="stat-value" id="stat-items">0</div>
-              <div class="stat-label">Total Unique Items</div>
+              <div class="stat-label">Total Items</div>
             </div>
           </div>
-          <div class="stat-card" style="--accent:#1565c0">
-            <div class="stat-icon">&#127970;</div>
+          <div class="stat-card" style="--accent:#1a4c7a">
+            <div class="stat-icon">🏷️</div>
             <div class="stat-info">
               <div class="stat-value" id="stat-categories">0</div>
-              <div class="stat-label">Active Stores</div>
+              <div class="stat-label">Categories</div>
             </div>
           </div>
-          <div class="stat-card" style="--accent:#6a1b9a">
-            <div class="stat-icon">&#128181;</div>
+          <div class="stat-card" style="--accent:#7a3e1a">
+            <div class="stat-icon">💰</div>
             <div class="stat-info">
               <div class="stat-value" id="stat-value">0</div>
-              <div class="stat-label">Total Stock Value (ETB)</div>
+              <div class="stat-label">Total Value (ETB)</div>
             </div>
           </div>
-          <div class="stat-card" style="--accent:#e65100">
-            <div class="stat-icon">&#9888;</div>
+          <div class="stat-card" style="--accent:#b91c1c">
+            <div class="stat-icon">⚠️</div>
             <div class="stat-info">
               <div class="stat-value" id="stat-low-stock">0</div>
               <div class="stat-label">Low Stock Alerts</div>
@@ -200,16 +201,16 @@
 
         <div class="two-col">
           <div class="card">
-            <div class="card-header">Recently Added Items</div>
+            <div class="card-header">📋 Recent Items</div>
             <table class="mini-table" id="dash-item-table">
-              <thead><tr><th>Item Name</th><th>Category</th><th>Qty On Hand</th></tr></thead>
+              <thead><tr><th>Item Name</th><th>Category</th><th>Qty</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
           <div class="card">
-            <div class="card-header">Item Stock Levels Relative to Threshold</div>
+            <div class="card-header">📊 Stock vs Threshold</div>
             <div class="card-body" style="padding: 20px;" id="stockBars">
-              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -217,8 +218,8 @@
       <section class="tab-content" id="tab-items">
         <div class="card">
           <div class="card-header">
-            Stock Registry
-            <button class="btn-add" onclick="openItemModal()">+ Add New Item</button>
+            📦 Stock Registry
+            <button class="btn-add" onclick="openItemModal()">+ Add Item</button>
           </div>
           <div class="table-wrap">
             <table class="data-table" id="itemTable">
@@ -234,7 +235,7 @@
       <section class="tab-content" id="tab-categories">
         <div class="two-col">
           <div class="card">
-            <div class="card-header">Store Categories</div>
+            <div class="card-header">🏷️ Store Categories</div>
             <div class="table-wrap">
               <table class="data-table" id="catTable">
                 <thead><tr><th>ID</th><th>Category Name</th><th>Actions</th></tr></thead>
@@ -243,10 +244,10 @@
             </div>
           </div>
           <div class="card" style="padding: 20px;">
-            <h3 style="margin-bottom:15px; font-family:var(--font-display)">Quick Add Category</h3>
+            <h3 style="margin-bottom:15px; font-family:var(--font-display)">➕ Quick Add Category</h3>
             <div class="form-group" style="margin-bottom:15px;">
               <label>Category Title</label>
-              <input type="text" id="addCatName" placeholder="e.g. Lab Chemicals, IT Equipment" />
+              <input type="text" id="addCatName" placeholder="e.g., Lab Equipment, Office Supplies" />
             </div>
             <button class="btn-save" onclick="saveCategory()" style="width:100%">Add Category</button>
           </div>
@@ -256,13 +257,13 @@
       <section class="tab-content" id="tab-suppliers">
         <div class="card">
           <div class="card-header">
-            Partnered Suppliers & Contractors
+            🏢 Supplier Directory
             <button class="btn-add" onclick="openModal('supplierModal')">+ Add Supplier</button>
           </div>
           <div class="table-wrap">
             <table class="data-table" id="supplierTable">
               <thead>
-                <tr><th>ID</th><th>Supplier Name</th><th>Contact Phone</th><th>Assigned Email</th><th>Actions</th></tr>
+                <tr><th>ID</th><th>Supplier Name</th><th>Contact Phone</th><th>Email</th><th>Actions</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -273,13 +274,13 @@
       <section class="tab-content" id="tab-movements">
         <div class="card">
           <div class="card-header">
-            Stock Logs (Inflow / Outflow)
+            🔄 Stock Movement Log
             <button class="btn-add" onclick="openModal('movementModal')">+ Log Movement</button>
           </div>
           <div class="table-wrap">
             <table class="data-table" id="movementTable">
               <thead>
-                <tr><th>ID</th><th>Date</th><th>Item</th><th>Type</th><th>Quantity Changed</th><th>Operator Note</th></tr>
+                <tr><th>ID</th><th>Date</th><th>Item</th><th>Type</th><th>Quantity</th><th>Note</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -289,11 +290,11 @@
 
       <section class="tab-content" id="tab-valuation">
         <div class="card">
-          <div class="card-header">Financial Auditing & Asset Valuation</div>
+          <div class="card-header">💰 Asset Valuation Report</div>
           <div class="table-wrap">
             <table class="data-table" id="valuationTable">
               <thead>
-                <tr><th>ID</th><th>Item Asset</th><th>Unit Price</th><th>In-Stock Quantity</th><th>Calculated Value</th></tr>
+                <tr><th>ID</th><th>Item Asset</th><th>Unit Price</th><th>Stock Qty</th><th>Total Value (ETB)</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -317,33 +318,33 @@
             </div>
             <div class="form-group">
               <label>Unit Cost (ETB)</label>
-              <input type="number" id="itemPrice" placeholder="Price per Unit" />
+              <input type="number" id="itemPrice" placeholder="Price per unit" />
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Initial Stock Balance</label>
+              <label>Initial Stock Qty</label>
               <input type="number" id="itemQty" placeholder="Available units" />
             </div>
             <div class="form-group">
-              <label>Alert Threshold (Low Stock)</label>
-              <input type="number" id="itemAlert" placeholder="Minimum quantity trigger" />
+              <label>Low Stock Alert (Qty)</label>
+              <input type="number" id="itemAlert" placeholder="Minimum threshold" />
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Store Location Category</label>
+              <label>Category</label>
               <select id="itemCat"></select>
             </div>
             <div class="form-group">
-              <label>Sourcing Supplier</label>
+              <label>Supplier</label>
               <select id="itemSupplier"></select>
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button class="btn-cancel" onclick="closeModal('itemModal')">Cancel</button>
-          <button class="btn-save" onclick="saveItem()">Save</button>
+          <button class="btn-save" onclick="saveItem()">Save Item</button>
         </div>
       </div>
     </div>
@@ -356,21 +357,21 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label>Company/Supplier Name</label>
-            <input type="text" id="supName" placeholder="Vendor company details" />
+            <label>Supplier Name</label>
+            <input type="text" id="supName" placeholder="Company name" />
           </div>
           <div class="form-group">
             <label>Phone Number</label>
-            <input type="text" id="supPhone" placeholder="Mobile/Telephone office" />
+            <input type="text" id="supPhone" placeholder="Contact phone" />
           </div>
           <div class="form-group">
-            <label>Email Contact</label>
-            <input type="email" id="supEmail" placeholder="vendor@domain.com" />
+            <label>Email</label>
+            <input type="email" id="supEmail" placeholder="supplier@example.com" />
           </div>
         </div>
         <div class="modal-footer">
           <button class="btn-cancel" onclick="closeModal('supplierModal')">Cancel</button>
-          <button class="btn-save" onclick="saveSupplier()">Save</button>
+          <button class="btn-save" onclick="saveSupplier()">Save Supplier</button>
         </div>
       </div>
     </div>
@@ -378,32 +379,31 @@
     <div class="modal-overlay" id="movementModal">
       <div class="modal modal-sm">
         <div class="modal-header">
-          <h3>Log Inventory Transaction</h3>
+          <h3>Log Stock Movement</h3>
           <button class="modal-close" onclick="closeModal('movementModal')">&times;</button>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label>Select Tracked Item</label>
+            <label>Item</label>
             <select id="moveItem"></select>
           </div>
           <div class="form-row">
             <div class="form-group">
               <label>Movement Type</label>
               <select id="moveType">
-                <option value="Restock (Inflow)">Restock (Inflow)</option>
-                <option value="Disbursed (Outflow)">Disbursed (Outflow)</option>
-                <option value="Damaged/Loss">Damaged / Loss</option>
+                <option value="Restock (Inflow)">📥 Restock (Inflow)</option>
+                <option value="Disbursed (Outflow)">📤 Disbursed (Outflow)</option>
+                <option value="Damaged/Loss">⚠️ Damaged / Loss</option>
               </select>
             </div>
-             at the back-end level to perform live analytics calculations.
             <div class="form-group">
-              <label>Quantity Delta</label>
+              <label>Quantity</label>
               <input type="number" id="moveQty" min="1" placeholder="Amount" />
             </div>
           </div>
           <div class="form-group">
-            <label>Activity Note/Purpose</label>
-            <input type="text" id="moveNote" placeholder="e.g. Distributed to IT Department" />
+            <label>Note / Purpose</label>
+            <input type="text" id="moveNote" placeholder="e.g., Issued to IT Lab" />
           </div>
         </div>
         <div class="modal-footer">
