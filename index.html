@@ -1,687 +1,422 @@
 <!DOCTYPE html>
-<html lang="om">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HU Inventory Management System</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <style>
-    /* ── RESET & BASE ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --hu-teal:    #008080;
-      --hu-teal-dk: #005a5a;
-      --hu-gold:    #ffcc00;
-      --bg:         #f0f4f8;
-      --surface:    #ffffff;
-      --surface2:   #f7f9fb;
-      --border:     #e2e8f0;
-      --text:       #1a202c;
-      --text-muted: #718096;
-      --red:        #e53e3e;
-      --green:      #38a169;
-      --radius:     10px;
-      --shadow:     0 2px 12px rgba(0,0,0,0.08);
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 32px 20px;
-    }
-
-    /* ── HEADER ── */
-    .header {
-      text-align: center;
-      margin-bottom: 32px;
-      animation: fadeUp 0.6s ease both;
-    }
-
-    .logo-ring {
-      width: 80px; height: 80px;
-      border-radius: 50%;
-      background: var(--hu-teal);
-      border: 4px solid var(--hu-gold);
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      margin-bottom: 14px;
-      box-shadow: 0 0 0 8px rgba(0,128,128,0.12);
-    }
-
-    .logo-ring .hu { font-size: 24px; font-weight: 700; line-height: 1; }
-    .logo-ring .year { font-size: 10px; color: var(--hu-gold); letter-spacing: 1.5px; }
-
-    .header h1 { font-size: 26px; font-weight: 700; color: var(--text); }
-    .header p  { font-size: 13px; color: var(--text-muted); margin-top: 4px; letter-spacing: 0.5px; }
-
-    /* ── LAYOUT ── */
-    .layout {
-      display: grid;
-      grid-template-columns: 380px 1fr;
-      gap: 24px;
-      max-width: 1100px;
-      margin: 0 auto;
-      align-items: start;
-      animation: fadeUp 0.7s 0.1s ease both;
-    }
-
-    @media (max-width: 800px) {
-      .layout { grid-template-columns: 1fr; }
-    }
-
-    /* ── CARD ── */
-    .card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      padding: 24px;
-    }
-
-    .card-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 2px solid var(--hu-teal);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .card-title svg { width: 18px; height: 18px; flex-shrink: 0; }
-
-    /* ── FORM ELEMENTS ── */
-    .form-group { margin-bottom: 18px; }
-
-    label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin-bottom: 6px;
-    }
-
-    input[type="text"],
-    input[type="number"],
-    textarea,
-    select {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1.5px solid var(--border);
-      border-radius: 7px;
-      font-size: 14px;
-      color: var(--text);
-      background: var(--surface2);
-      transition: border-color 0.2s, box-shadow 0.2s;
-      font-family: inherit;
-    }
-
-    input[type="text"]:focus,
-    input[type="number"]:focus,
-    textarea:focus,
-    select:focus {
-      outline: none;
-      border-color: var(--hu-teal);
-      box-shadow: 0 0 0 3px rgba(0,128,128,0.12);
-      background: #fff;
-    }
-
-    textarea { resize: vertical; min-height: 80px; }
-
-    .err-msg {
-      font-size: 11px;
-      color: var(--red);
-      margin-top: 4px;
-      display: none;
-    }
-
-    /* ── CATEGORY PILLS ── */
-    .cat-group { display: flex; gap: 8px; flex-wrap: wrap; }
-
-    .cat-btn {
-      padding: 7px 14px;
-      border-radius: 20px;
-      border: 1.5px solid var(--border);
-      background: var(--surface2);
-      color: var(--text-muted);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.18s;
-      font-family: inherit;
-    }
-
-    .cat-btn:hover { border-color: var(--hu-teal); color: var(--hu-teal); }
-    .cat-btn.active { background: var(--hu-teal); border-color: var(--hu-teal); color: #fff; }
-
-    /* ── CHAR COUNTER ── */
-    .desc-footer { display: flex; justify-content: space-between; margin-top: 4px; }
-    .char-count { font-size: 11px; color: var(--text-muted); }
-
-    /* ── BUTTONS ── */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 10px 18px;
-      border-radius: 7px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      font-family: inherit;
-      transition: all 0.18s;
-    }
-
-    .btn:active { transform: scale(0.97); }
-
-    .btn-primary {
-      background: var(--hu-teal);
-      color: #fff;
-      width: 100%;
-      justify-content: center;
-    }
-
-    .btn-primary:hover { background: var(--hu-teal-dk); }
-
-    .btn-outline {
-      background: transparent;
-      border: 1.5px solid var(--border);
-      color: var(--text-muted);
-      font-size: 13px;
-      padding: 7px 14px;
-    }
-
-    .btn-outline:hover { border-color: var(--hu-teal); color: var(--hu-teal); }
-
-    .btn-danger {
-      background: transparent;
-      border: 1.5px solid #fed7d7;
-      color: var(--red);
-      font-size: 13px;
-      padding: 7px 14px;
-    }
-
-    .btn-danger:hover { background: #fff5f5; }
-
-    .btn-excel {
-      background: #1d6f42;
-      color: #fff;
-      font-size: 13px;
-      padding: 7px 14px;
-    }
-
-    .btn-excel:hover { background: #15502f; }
-
-    .btn-print {
-      background: #2b6cb0;
-      color: #fff;
-      font-size: 13px;
-      padding: 7px 14px;
-    }
-
-    .btn-print:hover { background: #1e4e8c; }
-
-    /* ── SUCCESS BANNER ── */
-    .success-banner {
-      display: none;
-      background: #f0fff4;
-      border: 1px solid #9ae6b4;
-      border-radius: 7px;
-      padding: 10px 14px;
-      font-size: 13px;
-      color: var(--green);
-      margin-top: 12px;
-      font-weight: 500;
-    }
-
-    /* ── RIGHT PANEL ── */
-    .panel-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .panel-title {
-      font-size: 15px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .count-badge {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      font-size: 12px;
-      padding: 2px 10px;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    .action-row { display: flex; gap: 8px; flex-wrap: wrap; }
-
-    /* ── STATS ── */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .stat-card {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 14px;
-      text-align: center;
-    }
-
-    .stat-card .val { font-size: 24px; font-weight: 700; color: var(--hu-teal); }
-    .stat-card .lbl { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-
-    /* ── EMPTY STATE ── */
-    .empty-state {
-      background: var(--surface2);
-      border: 1.5px dashed var(--border);
-      border-radius: var(--radius);
-      padding: 40px 20px;
-      text-align: center;
-      color: var(--text-muted);
-    }
-
-    .empty-state svg { width: 40px; height: 40px; margin-bottom: 10px; opacity: 0.35; }
-    .empty-state p { font-size: 14px; }
-
-    /* ── TABLE ── */
-    .table-wrap {
-      overflow-x: auto;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-      table-layout: fixed;
-    }
-
-    thead th {
-      background: var(--surface2);
-      padding: 10px 12px;
-      text-align: left;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border);
-    }
-
-    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: #f7fbfb; }
-
-    td {
-      padding: 10px 12px;
-      color: var(--text);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    .badge-Electronics { background: #ebf8ff; color: #2b6cb0; }
-    .badge-Furniture   { background: #e6fffa; color: #2c7a7b; }
-    .badge-Stationery  { background: #fffff0; color: #b7791f; }
-
-    .del-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #ccc;
-      font-size: 16px;
-      line-height: 1;
-      padding: 2px 6px;
-      border-radius: 4px;
-      transition: color 0.15s;
-    }
-
-    .del-btn:hover { color: var(--red); }
-
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── PRINT STYLES ── */
-    @media print {
-      body { background: #fff; padding: 0; }
-      .layout { display: block; }
-      .form-col { display: none; }
-      .action-row, .del-btn, .panel-header .action-row { display: none; }
-      .card { box-shadow: none; border: 1px solid #ccc; }
-      .header { margin-bottom: 16px; }
-      .stats-grid { break-inside: avoid; }
-      table { page-break-inside: auto; }
-      tr { page-break-inside: avoid; }
-      thead { display: table-header-group; }
-
-      .print-title {
-        display: block !important;
-        font-size: 14px;
-        font-weight: 700;
-        text-align: center;
-        color: #008080;
-        margin-bottom: 8px;
-      }
-    }
-
-    .print-title { display: none; }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HU Campus Inventory Management System</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght=600;700&family=DM+Sans:wght=300;400;500;600&display=swap" rel="stylesheet"/>
 </head>
 <body>
 
-  <div class="header">
-    <div class="logo-ring">
-      <span class="hu">HU</span>
-      <span class="year">1954</span>
+  <div id="authScreen">
+    <div class="auth-left">
+      <div class="auth-brand">
+        <div class="auth-logo">HU</div>
+        <div>
+          <div class="auth-brand-name">HU Cluster</div>
+          <div class="auth-brand-sub">Inventory Management System</div>
+        </div>
+      </div>
+      <div class="auth-left-body">
+        <h2 class="auth-headline">Track university assets<br/>with flawless precision.</h2>
+        <p class="auth-desc">A centralized stock database for Haramaya University Cluster managing equipment, material stock levels, suppliers, stock movements, and requests.</p>
+        <div class="auth-features">
+          <div class="auth-feature"><span>&#10003;</span> Stock Item Catalog</div>
+          <div class="auth-feature"><span>&#10003;</span> Supplier Records</div>
+          <div class="auth-feature"><span>&#10003;</span> Stock Logs & Movement</div>
+          <div class="auth-feature"><span>&#10003;</span> Store Categories & Rooms</div>
+        </div>
+      </div>
+      <div class="auth-left-footer">Haramaya University &mdash; College of Computing and Informatics</div>
     </div>
-    <h1>HU Inventory Management System</h1>
-    <p>Haramaya University &mdash; Department Inventory Tracker</p>
+    <div class="auth-right">
+      <div class="auth-form active" id="loginForm">
+        <div class="auth-form-header">
+          <h2>Welcome back</h2>
+          <p>Sign in to your Inventory portal account</p>
+        </div>
+        <div class="auth-field">
+          <label>Username</label>
+          <input type="text" id="loginUsername" placeholder="Enter your username" />
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <div class="pass-wrap">
+            <input type="password" id="loginPassword" placeholder="Enter your password" />
+            <button class="pass-toggle" onclick="togglePass('loginPassword', this)">&#128065;</button>
+          </div>
+        </div>
+        <div class="auth-error" id="loginError"></div>
+        <button class="auth-btn" onclick="handleLogin()">Sign In</button>
+        <div class="auth-switch">
+          Do not have an account?
+          <button onclick="switchToSignup()">Create account</button>
+        </div>
+        <div class="auth-hint">
+          <strong>Demo:</strong> username <code>admin</code> &nbsp;|&nbsp; password <code>admin123</code>
+        </div>
+      </div>
+      <div class="auth-form" id="signupForm">
+        <div class="auth-form-header">
+          <h2>Create account</h2>
+          <p>Register a new Store Keeper account</p>
+        </div>
+        <div class="auth-field">
+          <label>Full Name</label>
+          <input type="text" id="signupName" placeholder="Your full name" />
+        </div>
+        <div class="auth-field">
+          <label>Username</label>
+          <input type="text" id="signupUsername" placeholder="Choose a username" />
+        </div>
+        <div class="auth-field">
+          <label>Role</label>
+          <select id="signupRole">
+            <option value="Store Administrator">Store Administrator</option>
+            <option value="Store Keeper">Store Keeper</option>
+            <option value="Auditor">Auditor</option>
+          </select>
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <div class="pass-wrap">
+            <input type="password" id="signupPassword" placeholder="Create a password" />
+            <button class="pass-toggle" onclick="togglePass('signupPassword', this)">&#128065;</button>
+          </div>
+        </div>
+        <div class="auth-field">
+          <label>Confirm Password</label>
+          <div class="pass-wrap">
+            <input type="password" id="signupConfirm" placeholder="Repeat your password" />
+            <button class="pass-toggle" onclick="togglePass('signupConfirm', this)">&#128065;</button>
+          </div>
+        </div>
+        <div class="auth-error" id="signupError"></div>
+        <div class="auth-success" id="signupSuccess"></div>
+        <button class="auth-btn" onclick="handleSignup()">Create Account</button>
+        <div class="auth-switch">
+          Already have an account?
+          <button onclick="switchToLogin()">Sign in</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="layout">
+  <div id="appScreen" style="display:none; width:100%; min-height:100vh;">
 
-    <!-- ── FORM COLUMN ── -->
-    <div class="form-col">
-      <div class="card">
-        <div class="card-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--hu-teal)"><path d="M12 5v14M5 12h14"/></svg>
-          Add new item
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">HU</div>
+        <div class="logo-text">
+          <span class="logo-title">Inventory Portal</span>
+          <span class="logo-sub">Haramaya University</span>
         </div>
+      </div>
 
-        <div class="form-group">
-          <label for="itemName">Maqaa Meeshaa &mdash; Item name</label>
-          <input type="text" id="itemName" placeholder="e.g. HP Laptop, Office Chair...">
-          <p class="err-msg" id="itemErr">&#9888; Item name is required</p>
-        </div>
-
-        <div class="form-group">
-          <label>Gosa Meeshaa &mdash; Category</label>
-          <div class="cat-group">
-            <button type="button" class="cat-btn" onclick="selectCat(this,'Electronics')">&#128187; Electronics</button>
-            <button type="button" class="cat-btn" onclick="selectCat(this,'Furniture')">&#128186; Furniture</button>
-            <button type="button" class="cat-btn" onclick="selectCat(this,'Stationery')">&#9997; Stationery</button>
-          </div>
-          <p class="err-msg" id="catErr">&#9888; Please select a category</p>
-        </div>
-
-        <div class="form-group">
-          <label for="qty">Baay&#39;ina &mdash; Quantity</label>
-          <input type="number" id="qty" min="1" value="1">
-        </div>
-
-        <div class="form-group">
-          <label for="desc">Ibsa Meeshaa &mdash; Description</label>
-          <textarea id="desc" placeholder="Provide a full description (min 10 characters)..."></textarea>
-          <div class="desc-footer">
-            <p class="err-msg" id="descErr" style="display:none">&#9888; Minimum 10 characters required</p>
-            <span class="char-count" id="charCount">0 / 10 min</span>
-          </div>
-        </div>
-
-        <button class="btn btn-primary" onclick="addItem()">
-          &#43; &nbsp; Mirkaneessi &amp; Galmeessi &mdash; Add item
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" data-tab="dashboard">
+          <span class="nav-icon">&#9783;</span> Dashboard
         </button>
+        <button class="nav-btn" data-tab="items">
+          <span class="nav-icon">&#128230;</span> Stock Items
+        </button>
+        <button class="nav-btn" data-tab="categories">
+          <span class="nav-icon">&#127970;</span> Store Categories
+        </button>
+        <button class="nav-btn" data-tab="suppliers">
+          <span class="nav-icon">&#128100;</span> Suppliers
+        </button>
+        <button class="nav-btn" data-tab="movements">
+          <span class="nav-icon">&#128197;</span> Stock Movements
+        </button>
+        <button class="nav-btn" data-tab="valuation">
+          <span class="nav-icon">&#128181;</span> Inventory Value
+        </button>
+      </nav>
 
-        <div class="success-banner" id="successBanner">
-          &#10003; &nbsp;<span id="successMsg"></span>
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="user-avatar">SA</div>
+          <div>
+            <div class="user-name">Admin Store</div>
+            <div class="user-role">Store Administrator</div>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="handleLogout()">&#x2192; Logout</button>
+      </div>
+    </aside>
+
+    <main class="main" id="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" id="menuToggle">&#9776;</button>
+          <h1 class="page-title" id="pageTitle">Dashboard</h1>
+        </div>
+        <div class="topbar-right">
+          <span class="date-badge" id="currentDate"></span>
+        </div>
+      </header>
+
+      <section class="tab-content active" id="tab-dashboard">
+        <div class="welcome-banner">
+          <div class="welcome-text">
+            <h2>Welcome back, Asset Manager</h2>
+            <p>HU Cluster Inventory Management System &mdash; Haramaya University</p>
+          </div>
+          <div class="welcome-deco">INV</div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card" style="--accent:#2e7d32">
+            <div class="stat-icon">&#128230;</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-items">0</div>
+              <div class="stat-label">Total Unique Items</div>
+            </div>
+          </div>
+          <div class="stat-card" style="--accent:#1565c0">
+            <div class="stat-icon">&#127970;</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-categories">0</div>
+              <div class="stat-label">Active Stores</div>
+            </div>
+          </div>
+          <div class="stat-card" style="--accent:#6a1b9a">
+            <div class="stat-icon">&#128181;</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-value">0</div>
+              <div class="stat-label">Total Stock Value (ETB)</div>
+            </div>
+          </div>
+          <div class="stat-card" style="--accent:#e65100">
+            <div class="stat-icon">&#9888;</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-low-stock">0</div>
+              <div class="stat-label">Low Stock Alerts</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header">Recently Added Items</div>
+            <table class="mini-table" id="dash-item-table">
+              <thead><tr><th>Item Name</th><th>Category</th><th>Qty On Hand</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-header">Item Stock Levels Relative to Threshold</div>
+            <div class="card-body" style="padding: 20px;" id="stockBars">
+              </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab-content" id="tab-items">
+        <div class="card">
+          <div class="card-header">
+            Stock Registry
+            <button class="btn-add" onclick="openItemModal()">+ Add New Item</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="itemTable">
+              <thead>
+                <tr><th>ID</th><th>Item Name</th><th>Category</th><th>Supplier</th><th>Unit Price</th><th>Quantity</th><th>Alert Level</th><th>Actions</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab-content" id="tab-categories">
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header">Store Categories</div>
+            <div class="table-wrap">
+              <table class="data-table" id="catTable">
+                <thead><tr><th>ID</th><th>Category Name</th><th>Actions</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card" style="padding: 20px;">
+            <h3 style="margin-bottom:15px; font-family:var(--font-display)">Quick Add Category</h3>
+            <div class="form-group" style="margin-bottom:15px;">
+              <label>Category Title</label>
+              <input type="text" id="addCatName" placeholder="e.g. Lab Chemicals, IT Equipment" />
+            </div>
+            <button class="btn-save" onclick="saveCategory()" style="width:100%">Add Category</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab-content" id="tab-suppliers">
+        <div class="card">
+          <div class="card-header">
+            Partnered Suppliers & Contractors
+            <button class="btn-add" onclick="openModal('supplierModal')">+ Add Supplier</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="supplierTable">
+              <thead>
+                <tr><th>ID</th><th>Supplier Name</th><th>Contact Phone</th><th>Assigned Email</th><th>Actions</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab-content" id="tab-movements">
+        <div class="card">
+          <div class="card-header">
+            Stock Logs (Inflow / Outflow)
+            <button class="btn-add" onclick="openModal('movementModal')">+ Log Movement</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="movementTable">
+              <thead>
+                <tr><th>ID</th><th>Date</th><th>Item</th><th>Type</th><th>Quantity Changed</th><th>Operator Note</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab-content" id="tab-valuation">
+        <div class="card">
+          <div class="card-header">Financial Auditing & Asset Valuation</div>
+          <div class="table-wrap">
+            <table class="data-table" id="valuationTable">
+              <thead>
+                <tr><th>ID</th><th>Item Asset</th><th>Unit Price</th><th>In-Stock Quantity</th><th>Calculated Value</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="modal-overlay" id="itemModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 id="itemModalTitle">Add New Stock Item</h3>
+          <button class="modal-close" onclick="closeModal('itemModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="itemEditId" />
+          <div class="form-row">
+            <div class="form-group">
+              <label>Item Name</label>
+              <input type="text" id="itemName" placeholder="Item description" />
+            </div>
+            <div class="form-group">
+              <label>Unit Cost (ETB)</label>
+              <input type="number" id="itemPrice" placeholder="Price per Unit" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Initial Stock Balance</label>
+              <input type="number" id="itemQty" placeholder="Available units" />
+            </div>
+            <div class="form-group">
+              <label>Alert Threshold (Low Stock)</label>
+              <input type="number" id="itemAlert" placeholder="Minimum quantity trigger" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Store Location Category</label>
+              <select id="itemCat"></select>
+            </div>
+            <div class="form-group">
+              <label>Sourcing Supplier</label>
+              <select id="itemSupplier"></select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" onclick="closeModal('itemModal')">Cancel</button>
+          <button class="btn-save" onclick="saveItem()">Save</button>
         </div>
       </div>
     </div>
 
-    <!-- ── RECORDS COLUMN ── -->
-    <div class="records-col">
-      <div class="panel-header">
-        <div class="panel-title">
-          Inventory records
-          <span class="count-badge" id="countBadge">0 items</span>
+    <div class="modal-overlay" id="supplierModal">
+      <div class="modal modal-sm">
+        <div class="modal-header">
+          <h3>Register Supplier</h3>
+          <button class="modal-close" onclick="closeModal('supplierModal')">&times;</button>
         </div>
-        <div class="action-row" id="actionRow" style="display:none">
-          <button class="btn btn-excel" onclick="exportExcel()">&#8659; Download .xlsx</button>
-          <button class="btn btn-print" onclick="printReport()">&#128438; Print / PDF</button>
-          <button class="btn btn-danger" onclick="clearAll()">&#128465; Clear all</button>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Company/Supplier Name</label>
+            <input type="text" id="supName" placeholder="Vendor company details" />
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text" id="supPhone" placeholder="Mobile/Telephone office" />
+          </div>
+          <div class="form-group">
+            <label>Email Contact</label>
+            <input type="email" id="supEmail" placeholder="vendor@domain.com" />
+          </div>
         </div>
-      </div>
-
-      <div class="stats-grid" id="statsGrid" style="display:none">
-        <div class="stat-card"><div class="val" id="statItems">0</div><div class="lbl">Total items</div></div>
-        <div class="stat-card"><div class="val" id="statQty">0</div><div class="lbl">Total qty</div></div>
-        <div class="stat-card"><div class="val" id="statCats">0</div><div class="lbl">Categories</div></div>
-      </div>
-
-      <p class="print-title" id="printTitle">HU Inventory Report &mdash; Haramaya University</p>
-
-      <div class="empty-state" id="emptyState">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M20 7H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/>
-          <path d="M16 3H8l-2 4h12l-2-4z"/>
-        </svg>
-        <p>No items yet. Add your first inventory item using the form.</p>
-      </div>
-
-      <div class="table-wrap" id="tableWrap" style="display:none">
-        <table>
-          <thead>
-            <tr>
-              <th style="width:4%">#</th>
-              <th style="width:24%">Item name</th>
-              <th style="width:16%">Category</th>
-              <th style="width:8%">Qty</th>
-              <th style="width:34%">Description</th>
-              <th style="width:10%">Date</th>
-              <th style="width:4%"></th>
-            </tr>
-          </thead>
-          <tbody id="invBody"></tbody>
-        </table>
+        <div class="modal-footer">
+          <button class="btn-cancel" onclick="closeModal('supplierModal')">Cancel</button>
+          <button class="btn-save" onclick="saveSupplier()">Save</button>
+        </div>
       </div>
     </div>
 
-  </div><!-- /.layout -->
+    <div class="modal-overlay" id="movementModal">
+      <div class="modal modal-sm">
+        <div class="modal-header">
+          <h3>Log Inventory Transaction</h3>
+          <button class="modal-close" onclick="closeModal('movementModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Select Tracked Item</label>
+            <select id="moveItem"></select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Movement Type</label>
+              <select id="moveType">
+                <option value="Restock (Inflow)">Restock (Inflow)</option>
+                <option value="Disbursed (Outflow)">Disbursed (Outflow)</option>
+                <option value="Damaged/Loss">Damaged / Loss</option>
+              </select>
+            </div>
+             at the back-end level to perform live analytics calculations.
+            <div class="form-group">
+              <label>Quantity Delta</label>
+              <input type="number" id="moveQty" min="1" placeholder="Amount" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Activity Note/Purpose</label>
+            <input type="text" id="moveNote" placeholder="e.g. Distributed to IT Department" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" onclick="closeModal('movementModal')">Cancel</button>
+          <button class="btn-save" onclick="saveMovement()">Apply Transaction</button>
+        </div>
+      </div>
+    </div>
 
-  <script>
-    // ── STATE ──
-    let inventory = [];
-    let selectedCat = null;
+  </div>
 
-    // ── CATEGORY SELECTION ──
-    function selectCat(el, val) {
-      selectedCat = val;
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
-      document.getElementById('catErr').style.display = 'none';
-    }
+  <div id="toast" class="toast"></div>
 
-    // ── LIVE CHAR COUNT ──
-    document.getElementById('desc').addEventListener('input', function () {
-      const len = this.value.trim().length;
-      document.getElementById('charCount').textContent = len + ' / 10 min';
-      if (len >= 10) document.getElementById('descErr').style.display = 'none';
-    });
-
-    document.getElementById('itemName').addEventListener('input', function () {
-      if (this.value.trim()) document.getElementById('itemErr').style.display = 'none';
-    });
-
-    // ── VALIDATION ──
-    function validateInventoryForm() {
-      const name = document.getElementById('itemName').value.trim();
-      const desc = document.getElementById('desc').value.trim();
-      let valid = true;
-
-      document.getElementById('successBanner').style.display = 'none';
-
-      if (!name) {
-        document.getElementById('itemErr').style.display = 'block';
-        document.getElementById('itemName').focus();
-        valid = false;
-      }
-      if (!selectedCat) {
-        document.getElementById('catErr').style.display = 'block';
-        valid = false;
-      }
-      if (desc.length < 10) {
-        document.getElementById('descErr').style.display = 'block';
-        document.getElementById('desc').focus();
-        valid = false;
-      }
-      return valid;
-    }
-
-    // ── ADD ITEM ──
-    function addItem() {
-      if (!validateInventoryForm()) return;
-
-      const name = document.getElementById('itemName').value.trim();
-      const desc = document.getElementById('desc').value.trim();
-      const qty  = parseInt(document.getElementById('qty').value) || 1;
-
-      inventory.push({
-        id:       Date.now(),
-        name,
-        category: selectedCat,
-        qty,
-        description: desc,
-        date: new Date().toLocaleDateString('en-GB')
-      });
-
-      renderTable();
-      updateStats();
-
-      // Success feedback
-      document.getElementById('successMsg').textContent = '"' + name + '" registered under ' + selectedCat;
-      document.getElementById('successBanner').style.display = 'block';
-
-      // Reset form
-      document.getElementById('itemName').value = '';
-      document.getElementById('desc').value = '';
-      document.getElementById('qty').value = 1;
-      document.getElementById('charCount').textContent = '0 / 10 min';
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      selectedCat = null;
-    }
-
-    // ── REMOVE ITEM ──
-    function removeItem(id) {
-      inventory = inventory.filter(i => i.id !== id);
-      renderTable();
-      updateStats();
-    }
-
-    // ── RENDER TABLE ──
-    function renderTable() {
-      const empty     = document.getElementById('emptyState');
-      const tableWrap = document.getElementById('tableWrap');
-      const actionRow = document.getElementById('actionRow');
-      const statsGrid = document.getElementById('statsGrid');
-
-      if (inventory.length === 0) {
-        empty.style.display = 'block';
-        tableWrap.style.display = 'none';
-        actionRow.style.display = 'none';
-        statsGrid.style.display = 'none';
-        return;
-      }
-
-      empty.style.display = 'none';
-      tableWrap.style.display = 'block';
-      actionRow.style.display = 'flex';
-      statsGrid.style.display = 'grid';
-
-      document.getElementById('invBody').innerHTML = inventory.map((item, idx) => `
-        <tr>
-          <td style="color:var(--text-muted)">${idx + 1}</td>
-          <td title="${item.name}"><strong>${item.name}</strong></td>
-          <td><span class="badge badge-${item.category}">${item.category}</span></td>
-          <td>${item.qty}</td>
-          <td title="${item.description}" style="color:var(--text-muted)">${item.description}</td>
-          <td style="color:var(--text-muted);font-size:12px">${item.date}</td>
-          <td><button class="del-btn" onclick="removeItem(${item.id})" title="Remove item">&times;</button></td>
-        </tr>
-      `).join('');
-    }
-
-    // ── UPDATE STATS ──
-    function updateStats() {
-      const total    = inventory.length;
-      const totalQty = inventory.reduce((s, i) => s + i.qty, 0);
-      const cats     = new Set(inventory.map(i => i.category)).size;
-      document.getElementById('countBadge').textContent = total + (total === 1 ? ' item' : ' items');
-      document.getElementById('statItems').textContent  = total;
-      document.getElementById('statQty').textContent    = totalQty;
-      document.getElementById('statCats').textContent   = cats;
-    }
-
-    // ── CLEAR ALL ──
-    function clearAll() {
-      if (!inventory.length) return;
-      if (!confirm('Clear all ' + inventory.length + ' record(s)? This cannot be undone.')) return;
-      inventory = [];
-      renderTable();
-      updateStats();
-      document.getElementById('countBadge').textContent = '0 items';
-    }
-
-    // ── EXPORT EXCEL ──
-    function exportExcel() {
-      if (!inventory.length) return;
-
-      const rows = [['#', 'Item Name', 'Category', 'Quantity', 'Description', 'Date Added']];
-      inventory.forEach((item, idx) => {
-        rows.push([idx + 1, item.name, item.category, item.qty, item.description, item.date]);
-      });
-
-      const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.aoa_to_sheet(rows);
-      ws['!cols'] = [{ wch: 4 }, { wch: 28 }, { wch: 14 }, { wch: 10 }, { wch: 42 }, { wch: 14 }];
-
-      XLSX.utils.book_append_sheet(wb, ws, 'HU Inventory');
-      const today = new Date().toISOString().slice(0, 10);
-      XLSX.writeFile(wb, 'HU_Inventory_' + today + '.xlsx');
-    }
-
-    // ── PRINT / PDF ──
-    function printReport() {
-      if (!inventory.length) return;
-      document.getElementById('printTitle').style.display = 'block';
-      window.print();
-      document.getElementById('printTitle').style.display = 'none';
-    }
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
