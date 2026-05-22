@@ -1,7 +1,7 @@
 /* ===================================================
-   HU Cluster Inventory Management System — app.js
-   All data data-binding, CRUD workflows, and DOM operations
-=================================================== */
+   HU Inventory Management System — app.js
+   All data-binding, CRUD workflows, and DOM operations
+   =================================================== */
 
 // =============================================
 // SEED INVENTORY DATA
@@ -418,10 +418,10 @@ function togglePass(id, btn) {
   const input = document.getElementById(id);
   if (input.type === 'password') {
     input.type = 'text';
-    btn.innerHTML = '&#128066;';
+    btn.innerHTML = '🔊';
   } else {
     input.type = 'password';
-    btn.innerHTML = '&#128065;';
+    btn.innerHTML = '👁️';
   }
 }
 
