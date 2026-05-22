@@ -3,299 +3,231 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HU Inventory Management System | Haramaya University</title>
+  <title>HU Inventory Management System</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- Use a different, more distinctive font combination -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 </head>
 <body>
 
+  <!-- AUTH SCREEN (same functional but visual changed slightly) -->
   <div id="authScreen">
-    <div class="auth-left">
-      <div class="auth-brand">
-        <div class="auth-logo">HU</div>
-        <div>
-          <div class="auth-brand-name">HU Inventory System</div>
-          <div class="auth-brand-sub">Asset & Stock Control</div>
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="auth-icon">📦</div>
+          <h1>HU Inventory</h1>
+          <p>Haramaya University Asset Management</p>
         </div>
-      </div>
-      <div class="auth-left-body">
-        <h2 class="auth-headline">Precision inventory<br/>for university operations.</h2>
-        <p class="auth-desc">Centralized inventory management for Haramaya University — track equipment, supplies, stock levels, suppliers, and movement logs in real time.</p>
-        <div class="auth-features">
-          <div class="auth-feature"><span>✓</span> Full Stock Catalog</div>
-          <div class="auth-feature"><span>✓</span> Supplier Directory</div>
-          <div class="auth-feature"><span>✓</span> Movement History</div>
-          <div class="auth-feature"><span>✓</span> Automated Valuation</div>
-        </div>
-      </div>
-      <div class="auth-left-footer">Haramaya University — College of Computing and Informatics</div>
-    </div>
-    <div class="auth-right">
-      <div class="auth-form active" id="loginForm">
-        <div class="auth-form-header">
-          <h2>Access inventory portal</h2>
-          <p>Sign in with your credentials</p>
-        </div>
-        <div class="auth-field">
-          <label>Username</label>
-          <input type="text" id="loginUsername" placeholder="e.g., admin" />
-        </div>
-        <div class="auth-field">
-          <label>Password</label>
-          <div class="pass-wrap">
-            <input type="password" id="loginPassword" placeholder="••••••" />
-            <button class="pass-toggle" onclick="togglePass('loginPassword', this)">👁️</button>
+        <div class="auth-body">
+          <div class="auth-form active" id="loginForm">
+            <div class="input-group">
+              <label>Username</label>
+              <input type="text" id="loginUsername" placeholder="admin" />
+            </div>
+            <div class="input-group">
+              <label>Password</label>
+              <div class="pass-wrap">
+                <input type="password" id="loginPassword" placeholder="••••••" />
+                <button class="pass-toggle" onclick="togglePass('loginPassword', this)">👁️</button>
+              </div>
+            </div>
+            <div class="auth-error" id="loginError"></div>
+            <button class="btn-primary" onclick="handleLogin()">Sign In →</button>
+            <div class="auth-switch">
+              New? <button onclick="switchToSignup()">Create account</button>
+            </div>
+            <div class="demo-hint">Demo: admin / admin123</div>
           </div>
-        </div>
-        <div class="auth-error" id="loginError"></div>
-        <button class="auth-btn" onclick="handleLogin()">Sign In →</button>
-        <div class="auth-switch">
-          New user?
-          <button onclick="switchToSignup()">Create account</button>
-        </div>
-        <div class="auth-hint">
-          <span>🔐 Demo: </span> <code>admin</code> / <code>admin123</code>
-        </div>
-      </div>
-      <div class="auth-form" id="signupForm">
-        <div class="auth-form-header">
-          <h2>Register store keeper</h2>
-          <p>Create a new inventory account</p>
-        </div>
-        <div class="auth-field">
-          <label>Full Name</label>
-          <input type="text" id="signupName" placeholder="Your full name" />
-        </div>
-        <div class="auth-field">
-          <label>Username</label>
-          <input type="text" id="signupUsername" placeholder="Choose a username" />
-        </div>
-        <div class="auth-field">
-          <label>Role</label>
-          <select id="signupRole">
-            <option value="Store Administrator">Store Administrator</option>
-            <option value="Store Keeper">Store Keeper</option>
-            <option value="Auditor">Auditor</option>
-          </select>
-        </div>
-        <div class="auth-field">
-          <label>Password</label>
-          <div class="pass-wrap">
-            <input type="password" id="signupPassword" placeholder="Create a password" />
-            <button class="pass-toggle" onclick="togglePass('signupPassword', this)">👁️</button>
+          <div class="auth-form" id="signupForm">
+            <div class="input-group">
+              <label>Full Name</label>
+              <input type="text" id="signupName" />
+            </div>
+            <div class="input-group">
+              <label>Username</label>
+              <input type="text" id="signupUsername" />
+            </div>
+            <div class="input-group">
+              <label>Role</label>
+              <select id="signupRole">
+                <option>Store Administrator</option>
+                <option>Store Keeper</option>
+                <option>Auditor</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>Password</label>
+              <input type="password" id="signupPassword" />
+            </div>
+            <div class="input-group">
+              <label>Confirm</label>
+              <input type="password" id="signupConfirm" />
+            </div>
+            <div class="auth-error" id="signupError"></div>
+            <div class="auth-success" id="signupSuccess"></div>
+            <button class="btn-primary" onclick="handleSignup()">Register →</button>
+            <div class="auth-switch">
+              Already have an account? <button onclick="switchToLogin()">Sign in</button>
+            </div>
           </div>
-        </div>
-        <div class="auth-field">
-          <label>Confirm Password</label>
-          <div class="pass-wrap">
-            <input type="password" id="signupConfirm" placeholder="Repeat your password" />
-            <button class="pass-toggle" onclick="togglePass('signupConfirm', this)">👁️</button>
-          </div>
-        </div>
-        <div class="auth-error" id="signupError"></div>
-        <div class="auth-success" id="signupSuccess"></div>
-        <button class="auth-btn" onclick="handleSignup()">Create account →</button>
-        <div class="auth-switch">
-          Already have an account?
-          <button onclick="switchToLogin()">Sign in</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div id="appScreen" style="display:none; width:100%; min-height:100vh;">
-
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-logo">
-        <div class="logo-icon">HU</div>
-        <div class="logo-text">
-          <span class="logo-title">HU Inventory</span>
-          <span class="logo-sub">Haramaya University</span>
-        </div>
+  <!-- MAIN APP (no sidebar, top nav only) -->
+  <div id="appScreen" style="display:none;">
+    <nav class="top-nav">
+      <div class="nav-brand">
+        <span class="brand-icon">📦</span>
+        <span class="brand-name">HU Inventory System</span>
+        <span class="brand-sub">Haramaya University</span>
       </div>
-
-      <nav class="sidebar-nav">
-        <button class="nav-btn active" data-tab="dashboard">
-          <span class="nav-icon">📊</span> Dashboard
-        </button>
-        <button class="nav-btn" data-tab="items">
-          <span class="nav-icon">📦</span> Stock Items
-        </button>
-        <button class="nav-btn" data-tab="categories">
-          <span class="nav-icon">🏷️</span> Categories
-        </button>
-        <button class="nav-btn" data-tab="suppliers">
-          <span class="nav-icon">🏢</span> Suppliers
-        </button>
-        <button class="nav-btn" data-tab="movements">
-          <span class="nav-icon">🔄</span> Movements
-        </button>
-        <button class="nav-btn" data-tab="valuation">
-          <span class="nav-icon">💰</span> Valuation
-        </button>
-      </nav>
-
-      <div class="sidebar-footer">
-        <div class="user-card">
-          <div class="user-avatar">SA</div>
-          <div>
-            <div class="user-name">Store Admin</div>
-            <div class="user-role">Administrator</div>
+      <div class="nav-links">
+        <button class="nav-link active" data-tab="dashboard">📊 Dashboard</button>
+        <button class="nav-link" data-tab="items">📦 Stock Items</button>
+        <button class="nav-link" data-tab="categories">🏷️ Categories</button>
+        <button class="nav-link" data-tab="suppliers">🏢 Suppliers</button>
+        <button class="nav-link" data-tab="movements">🔄 Movements</button>
+        <button class="nav-link" data-tab="valuation">💰 Valuation</button>
+      </div>
+      <div class="nav-user">
+        <div class="user-badge">
+          <span class="user-avatar-small">SA</span>
+          <div class="user-info">
+            <span class="user-name-small">Admin Store</span>
+            <span class="user-role-small">Administrator</span>
           </div>
         </div>
-        <button class="btn-logout" onclick="handleLogout()">🚪 Logout</button>
+        <button class="logout-btn" onclick="handleLogout()">🚪</button>
       </div>
-    </aside>
+    </nav>
 
-    <main class="main" id="main">
-      <header class="topbar">
-        <div class="topbar-left">
-          <button class="menu-toggle" id="menuToggle">☰</button>
-          <h1 class="page-title" id="pageTitle">Dashboard</h1>
-        </div>
-        <div class="topbar-right">
-          <span class="date-badge" id="currentDate"></span>
-        </div>
+    <main class="app-main">
+      <header class="page-header">
+        <h1 id="pageTitle">Dashboard</h1>
+        <div class="date-chip" id="currentDate"></div>
       </header>
 
-      <section class="tab-content active" id="tab-dashboard">
-        <div class="welcome-banner">
-          <div class="welcome-text">
-            <h2>Welcome, Asset Manager</h2>
-            <p>HU Inventory Management System — real‑time stock control for Haramaya University</p>
+      <!-- DASHBOARD TAB -->
+      <section class="tab-pane active" id="tab-dashboard">
+        <div class="stats-grid-alt">
+          <div class="stat-alt">
+            <div class="stat-alt-icon">📦</div>
+            <div class="stat-alt-value" id="stat-items">0</div>
+            <div class="stat-alt-label">Total Items</div>
           </div>
-          <div class="welcome-deco">IMS</div>
-        </div>
-
-        <div class="stats-grid">
-          <div class="stat-card" style="--accent:#0b5e42">
-            <div class="stat-icon">📦</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-items">0</div>
-              <div class="stat-label">Total Items</div>
-            </div>
+          <div class="stat-alt">
+            <div class="stat-alt-icon">🏷️</div>
+            <div class="stat-alt-value" id="stat-categories">0</div>
+            <div class="stat-alt-label">Categories</div>
           </div>
-          <div class="stat-card" style="--accent:#1a4c7a">
-            <div class="stat-icon">🏷️</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-categories">0</div>
-              <div class="stat-label">Categories</div>
-            </div>
+          <div class="stat-alt">
+            <div class="stat-alt-icon">💰</div>
+            <div class="stat-alt-value" id="stat-value">0</div>
+            <div class="stat-alt-label">Total Value (ETB)</div>
           </div>
-          <div class="stat-card" style="--accent:#7a3e1a">
-            <div class="stat-icon">💰</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-value">0</div>
-              <div class="stat-label">Total Value (ETB)</div>
-            </div>
-          </div>
-          <div class="stat-card" style="--accent:#b91c1c">
-            <div class="stat-icon">⚠️</div>
-            <div class="stat-info">
-              <div class="stat-value" id="stat-low-stock">0</div>
-              <div class="stat-label">Low Stock Alerts</div>
-            </div>
+          <div class="stat-alt">
+            <div class="stat-alt-icon">⚠️</div>
+            <div class="stat-alt-value" id="stat-low-stock">0</div>
+            <div class="stat-alt-label">Low Stock Alerts</div>
           </div>
         </div>
 
-        <div class="two-col">
-          <div class="card">
-            <div class="card-header">📋 Recent Items</div>
-            <table class="mini-table" id="dash-item-table">
-              <thead><tr><th>Item Name</th><th>Category</th><th>Qty</th></tr></thead>
-              <tbody></tbody>
-            </table>
-          </div>
-          <div class="card">
-            <div class="card-header">📊 Stock vs Threshold</div>
-            <div class="card-body" style="padding: 20px;" id="stockBars">
+        <div class="row-split">
+          <div class="info-panel">
+            <div class="panel-header">📋 Recent Items</div>
+            <div class="panel-body">
+              <table class="compact-table" id="dash-item-table">
+                <thead><tr><th>Item</th><th>Category</th><th>Qty</th></tr></thead>
+                <tbody></tbody>
+              </table>
             </div>
+          </div>
+          <div class="info-panel">
+            <div class="panel-header">📊 Stock vs Threshold</div>
+            <div class="panel-body" id="stockBars"></div>
           </div>
         </div>
       </section>
 
-      <section class="tab-content" id="tab-items">
-        <div class="card">
-          <div class="card-header">
-            📦 Stock Registry
-            <button class="btn-add" onclick="openItemModal()">+ Add Item</button>
+      <!-- ITEMS TAB -->
+      <section class="tab-pane" id="tab-items">
+        <div class="data-panel">
+          <div class="panel-header">
+            Stock Registry
+            <button class="btn-outline" onclick="openItemModal()">+ Add Item</button>
           </div>
-          <div class="table-wrap">
-            <table class="data-table" id="itemTable">
-              <thead>
-                <tr><th>ID</th><th>Item Name</th><th>Category</th><th>Supplier</th><th>Unit Price</th><th>Quantity</th><th>Alert Level</th><th>Actions</th></tr>
-              </thead>
+          <div class="panel-body no-padding">
+            <table class="full-table" id="itemTable">
+              <thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Supplier</th><th>Price</th><th>Qty</th><th>Alert</th><th>Actions</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <section class="tab-content" id="tab-categories">
-        <div class="two-col">
-          <div class="card">
-            <div class="card-header">🏷️ Store Categories</div>
-            <div class="table-wrap">
-              <table class="data-table" id="catTable">
+      <!-- CATEGORIES TAB -->
+      <section class="tab-pane" id="tab-categories">
+        <div class="row-split">
+          <div class="data-panel">
+            <div class="panel-header">Store Categories</div>
+            <div class="panel-body no-padding">
+              <table class="full-table" id="catTable">
                 <thead><tr><th>ID</th><th>Category Name</th><th>Actions</th></tr></thead>
                 <tbody></tbody>
               </table>
             </div>
           </div>
-          <div class="card" style="padding: 20px;">
-            <h3 style="margin-bottom:15px; font-family:var(--font-display)">➕ Quick Add Category</h3>
-            <div class="form-group" style="margin-bottom:15px;">
-              <label>Category Title</label>
-              <input type="text" id="addCatName" placeholder="e.g., Lab Equipment, Office Supplies" />
+          <div class="data-panel">
+            <div class="panel-header">Quick Add</div>
+            <div class="panel-body">
+              <input type="text" id="addCatName" placeholder="Category title" class="full-width" />
+              <button class="btn-primary" onclick="saveCategory()" style="margin-top:12px;">Add Category</button>
             </div>
-            <button class="btn-save" onclick="saveCategory()" style="width:100%">Add Category</button>
           </div>
         </div>
       </section>
 
-      <section class="tab-content" id="tab-suppliers">
-        <div class="card">
-          <div class="card-header">
-            🏢 Supplier Directory
-            <button class="btn-add" onclick="openModal('supplierModal')">+ Add Supplier</button>
+      <!-- SUPPLIERS TAB -->
+      <section class="tab-pane" id="tab-suppliers">
+        <div class="data-panel">
+          <div class="panel-header">
+            Supplier Directory
+            <button class="btn-outline" onclick="openModal('supplierModal')">+ Add Supplier</button>
           </div>
-          <div class="table-wrap">
-            <table class="data-table" id="supplierTable">
-              <thead>
-                <tr><th>ID</th><th>Supplier Name</th><th>Contact Phone</th><th>Email</th><th>Actions</th></tr>
-              </thead>
+          <div class="panel-body no-padding">
+            <table class="full-table" id="supplierTable">
+              <thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Email</th><th>Actions</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <section class="tab-content" id="tab-movements">
-        <div class="card">
-          <div class="card-header">
-            🔄 Stock Movement Log
-            <button class="btn-add" onclick="openModal('movementModal')">+ Log Movement</button>
+      <!-- MOVEMENTS TAB -->
+      <section class="tab-pane" id="tab-movements">
+        <div class="data-panel">
+          <div class="panel-header">
+            Stock Movement Log
+            <button class="btn-outline" onclick="openModal('movementModal')">+ Log Movement</button>
           </div>
-          <div class="table-wrap">
-            <table class="data-table" id="movementTable">
-              <thead>
-                <tr><th>ID</th><th>Date</th><th>Item</th><th>Type</th><th>Quantity</th><th>Note</th></tr>
-              </thead>
+          <div class="panel-body no-padding">
+            <table class="full-table" id="movementTable">
+              <thead><tr><th>ID</th><th>Date</th><th>Item</th><th>Type</th><th>Qty</th><th>Note</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <section class="tab-content" id="tab-valuation">
-        <div class="card">
-          <div class="card-header">💰 Asset Valuation Report</div>
-          <div class="table-wrap">
-            <table class="data-table" id="valuationTable">
-              <thead>
-                <tr><th>ID</th><th>Item Asset</th><th>Unit Price</th><th>Stock Qty</th><th>Total Value (ETB)</th></tr>
-              </thead>
+      <!-- VALUATION TAB -->
+      <section class="tab-pane" id="tab-valuation">
+        <div class="data-panel">
+          <div class="panel-header">Asset Valuation Report</div>
+          <div class="panel-body no-padding">
+            <table class="full-table" id="valuationTable">
+              <thead><tr><th>ID</th><th>Asset</th><th>Unit Price</th><th>Stock Qty</th><th>Total Value</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
@@ -303,120 +235,119 @@
       </section>
     </main>
 
+    <!-- MODALS (same IDs, different styling) -->
     <div class="modal-overlay" id="itemModal">
-      <div class="modal">
-        <div class="modal-header">
+      <div class="modal-window">
+        <div class="modal-head">
           <h3 id="itemModalTitle">Add New Stock Item</h3>
           <button class="modal-close" onclick="closeModal('itemModal')">&times;</button>
         </div>
         <div class="modal-body">
           <input type="hidden" id="itemEditId" />
           <div class="form-row">
-            <div class="form-group">
+            <div class="input-group">
               <label>Item Name</label>
-              <input type="text" id="itemName" placeholder="Item description" />
+              <input type="text" id="itemName" />
             </div>
-            <div class="form-group">
-              <label>Unit Cost (ETB)</label>
-              <input type="number" id="itemPrice" placeholder="Price per unit" />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Initial Stock Qty</label>
-              <input type="number" id="itemQty" placeholder="Available units" />
-            </div>
-            <div class="form-group">
-              <label>Low Stock Alert (Qty)</label>
-              <input type="number" id="itemAlert" placeholder="Minimum threshold" />
+            <div class="input-group">
+              <label>Unit Price (ETB)</label>
+              <input type="number" id="itemPrice" />
             </div>
           </div>
           <div class="form-row">
-            <div class="form-group">
+            <div class="input-group">
+              <label>Initial Qty</label>
+              <input type="number" id="itemQty" />
+            </div>
+            <div class="input-group">
+              <label>Alert Level</label>
+              <input type="number" id="itemAlert" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="input-group">
               <label>Category</label>
               <select id="itemCat"></select>
             </div>
-            <div class="form-group">
+            <div class="input-group">
               <label>Supplier</label>
               <select id="itemSupplier"></select>
             </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button class="btn-cancel" onclick="closeModal('itemModal')">Cancel</button>
-          <button class="btn-save" onclick="saveItem()">Save Item</button>
+        <div class="modal-foot">
+          <button class="btn-secondary" onclick="closeModal('itemModal')">Cancel</button>
+          <button class="btn-primary" onclick="saveItem()">Save Item</button>
         </div>
       </div>
     </div>
 
     <div class="modal-overlay" id="supplierModal">
-      <div class="modal modal-sm">
-        <div class="modal-header">
+      <div class="modal-window small">
+        <div class="modal-head">
           <h3>Register Supplier</h3>
           <button class="modal-close" onclick="closeModal('supplierModal')">&times;</button>
         </div>
         <div class="modal-body">
-          <div class="form-group">
+          <div class="input-group">
             <label>Supplier Name</label>
-            <input type="text" id="supName" placeholder="Company name" />
+            <input type="text" id="supName" />
           </div>
-          <div class="form-group">
-            <label>Phone Number</label>
-            <input type="text" id="supPhone" placeholder="Contact phone" />
+          <div class="input-group">
+            <label>Phone</label>
+            <input type="text" id="supPhone" />
           </div>
-          <div class="form-group">
+          <div class="input-group">
             <label>Email</label>
-            <input type="email" id="supEmail" placeholder="supplier@example.com" />
+            <input type="email" id="supEmail" />
           </div>
         </div>
-        <div class="modal-footer">
-          <button class="btn-cancel" onclick="closeModal('supplierModal')">Cancel</button>
-          <button class="btn-save" onclick="saveSupplier()">Save Supplier</button>
+        <div class="modal-foot">
+          <button class="btn-secondary" onclick="closeModal('supplierModal')">Cancel</button>
+          <button class="btn-primary" onclick="saveSupplier()">Save</button>
         </div>
       </div>
     </div>
 
     <div class="modal-overlay" id="movementModal">
-      <div class="modal modal-sm">
-        <div class="modal-header">
+      <div class="modal-window small">
+        <div class="modal-head">
           <h3>Log Stock Movement</h3>
           <button class="modal-close" onclick="closeModal('movementModal')">&times;</button>
         </div>
         <div class="modal-body">
-          <div class="form-group">
+          <div class="input-group">
             <label>Item</label>
             <select id="moveItem"></select>
           </div>
           <div class="form-row">
-            <div class="form-group">
-              <label>Movement Type</label>
+            <div class="input-group">
+              <label>Type</label>
               <select id="moveType">
-                <option value="Restock (Inflow)">📥 Restock (Inflow)</option>
-                <option value="Disbursed (Outflow)">📤 Disbursed (Outflow)</option>
-                <option value="Damaged/Loss">⚠️ Damaged / Loss</option>
+                <option>Restock (Inflow)</option>
+                <option>Disbursed (Outflow)</option>
+                <option>Damaged/Loss</option>
               </select>
             </div>
-            <div class="form-group">
+            <div class="input-group">
               <label>Quantity</label>
-              <input type="number" id="moveQty" min="1" placeholder="Amount" />
+              <input type="number" id="moveQty" min="1" />
             </div>
           </div>
-          <div class="form-group">
-            <label>Note / Purpose</label>
-            <input type="text" id="moveNote" placeholder="e.g., Issued to IT Lab" />
+          <div class="input-group">
+            <label>Note</label>
+            <input type="text" id="moveNote" />
           </div>
         </div>
-        <div class="modal-footer">
-          <button class="btn-cancel" onclick="closeModal('movementModal')">Cancel</button>
-          <button class="btn-save" onclick="saveMovement()">Apply Transaction</button>
+        <div class="modal-foot">
+          <button class="btn-secondary" onclick="closeModal('movementModal')">Cancel</button>
+          <button class="btn-primary" onclick="saveMovement()">Apply</button>
         </div>
       </div>
     </div>
-
   </div>
 
   <div id="toast" class="toast"></div>
-
   <script src="app.js"></script>
 </body>
 </html>
